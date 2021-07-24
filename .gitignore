@@ -1,3 +1,9 @@
+W40KFilesBackup/
+src/python3/guides_that_I_used.txt
+src/python3/test.txt
+src/python3/Local.ini
+*.exe
+*.dll
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
