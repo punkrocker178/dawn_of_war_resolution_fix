@@ -150,7 +150,7 @@ def SelectResolution():
 	newWidthRes="screenwidth=800"
 	newHeightRes="screenwidth=600"
 	userSelection=99
-	options = [0,1,2,3,4,6,7]
+	options = [0,1,2,3,4,5,6,7]
 	while int(userSelection) not in options:
 		print("Pick the resolution in which you would like to play Warhammer 40k: Dawn Of War. \n Warhammer 40k: Dawn Of War's default resolution is 800x600")
 		print("0 - 800x600")#5555D53F
@@ -211,7 +211,6 @@ def SelectResolution():
 		else:
 			print("Error: the option you typed ", userSelection,"is not a number! Please type the number of one of the avaliable options")
 			userSelection=99  #we add a default numeric value that doesnt exist in the avaliable options to avoid a catch because the user typed a value thats not a number
-
 	removeLineifStringIsFound("Local.ini","screenwidth")
 	removeLineifStringIsFound("Local.ini","screenheight")
 	removeLineifStringIsFound("Local.ini","\n")#truncateDocument
@@ -233,6 +232,25 @@ def writeAtTheEndOfFile(filename, newLine):
 	# Close the file
 	file_object.close()
 
+def mainMenu():
+	print("Dawn of War Resolution Fix python Script Main Menu \n What would you like to do?\n 0: Change Aspect Ratio of The Game  \n 1: Change Resolution of the game \n 2: Restore original settings")
+	print("")
+
+def IsExecutablePatched(filename,originalHexString):
+	#check if executable had its aspect ratio values already edited by this script or another one
+	tf=False
+	originalBinaryString=binascii.unhexlify(originalHexString)
+	print("Checking if Dawn of War executable is already patched...")
+	with open(filename,"rb") as file:
+		contents = file.read()
+		searchString = originalBinaryString
+		if searchString in contents:
+			print("{0} executable aspect ratio  is not patched yet".format(filename))
+			tf=False
+		else:
+			print("{0} executable aspect ratio  has been patched".format(filename))
+			tf=True
+	return tf
 
 #Check if Backup dir of files already exists if not, create W40KFilesBackup folder
 def main():
@@ -246,10 +264,11 @@ def main():
 	Backup_and_rename_original_file("spDx9.dll","W40KFilesBackup")
 	Backup_and_rename_original_file("UserInterface.dll","W40KFilesBackup")
 	SelectResolution()
-	aspectRatioHexValue=SelectAspectRatio()
-	print("Changing aspect ratio to its new hex value:",aspectRatioHexValue)
-	edit_hex("ABAAAA3F",aspectRatioHexValue,"W40k.exe")
-	edit_hex("ABAAAA3F",aspectRatioHexValue,"Platform.dll")
-	edit_hex("ABAAAA3F",aspectRatioHexValue,"spDx9.dll")
-	edit_hex("ABAAAA3F",aspectRatioHexValue,"UserInterface.dll")
+	if IsExecutablePatched("W40k.exe","ABAAAA3F")==False:
+		aspectRatioHexValue=SelectAspectRatio()
+		print("Changing aspect ratio to its new hex value:",aspectRatioHexValue)
+		edit_hex("ABAAAA3F",aspectRatioHexValue,"W40k.exe")
+		edit_hex("ABAAAA3F",aspectRatioHexValue,"Platform.dll")
+		edit_hex("ABAAAA3F",aspectRatioHexValue,"spDx9.dll")
+		edit_hex("ABAAAA3F",aspectRatioHexValue,"UserInterface.dll")
 main()
