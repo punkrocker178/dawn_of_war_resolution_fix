@@ -151,6 +151,7 @@ def SelectResolution():
 	newHeightRes="screenwidth=600"
 	userSelection=99
 	options = [0,1,2,3,4,5,6,7]
+
 	while int(userSelection) not in options:
 		print("Pick the resolution in which you would like to play Warhammer 40k: Dawn Of War. \n Warhammer 40k: Dawn Of War's default resolution is 800x600")
 		print("0 - 800x600")#5555D53F
@@ -167,45 +168,69 @@ def SelectResolution():
 				print("You picked option", userSelection)
 				numberPicked= int(userSelection)
 				if numberPicked==0:
-					print("800x600 was selected")
-					newWidthRes="screenwidth=800"
-					newHeightRes="screenheight=600"
-					break
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=800","screenheight=600")==False:
+						print("800x600 was selected")
+						newWidthRes="screenwidth=800"
+						newHeightRes="screenheight=600"
+						break
+					else:
+						userSelection=99 #makes while not break
 				elif numberPicked==1:
-					print("1280x720 was selected")
-					newWidthRes="screenwidth=1280"
-					newHeightRes="screenheight=720"
-					break
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=1280","screenheight=720")==False:
+						print("1280x720 was selected")
+						newWidthRes="screenwidth=1280"
+						newHeightRes="screenheight=720"
+						break
+					else:
+						userSelection=99 #makes while not break
 				elif numberPicked==2:
-					print("1920x1080 was selected")
-					newWidthRes="screenwidth=1920"
-					newHeightRes="screenheight=1080"
-					break
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=1920","screenheight=1080")==False:
+						print("1920x1080 was selected")
+						newWidthRes="screenwidth=1920"
+						newHeightRes="screenheight=1080"
+						break
+					else:
+						userSelection=99 #makes while not break
 				elif numberPicked==3:
-					print("1920x1200 was selected")
-					newWidthRes="screenwidth=1920"
-					newHeightRes="screenheight=1200"
-					break
-				elif numberPicked==4:
-					print("2560x1440 was selected")
-					newWidthRes="screenwidth=2560"
-					newHeightRes="screenheight=1440"
-					break
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=1920","screenheight=1200")==False:
+						print("1920x1200 was selected")
+						newWidthRes="screenwidth=1920"
+						newHeightRes="screenheight=1200"
+						break
+					else:
+						userSelection=99 #makes while not break
+				elif numberPicked==4: 
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=2560","screenheight=1440")==False:
+						print("2560x1440 was selected")
+						newWidthRes="screenwidth=2560"
+						newHeightRes="screenheight=1440"
+						break
+					else:
+						userSelection=99 #makes while not break
 				elif numberPicked==5:
-					print("3440x1440 was selected")
-					newWidthRes="screenwidth=3440"
-					newHeightRes="screenheight=1440"
-					break
-				elif numberPicked==6:
-					print("3840x2160 was selected")
-					newWidthRes="screenwidth=3840"
-					newHeightRes="screenheight=2160"
-					break
-				elif numberPicked==7:
-					print("7680x4320 was selected")
-					newWidthRes="screenwidth=7680"
-					newHeightRes="screenheight=4320"
-					break
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=3440","screenheight=1440")==False:
+						print("3440x1440 was selected")
+						newWidthRes="screenwidth=3440"
+						newHeightRes="screenheight=1440"
+						break
+					else:
+						userSelection=99 #makes while not break
+				elif numberPicked==6: 
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=3840","screenheight=2160")==False:
+						print("3840x2160 was selected")
+						newWidthRes="screenwidth=3840"
+						newHeightRes="screenheight=2160"
+						break
+					else:
+						userSelection=99 #makes while not break
+				elif numberPicked==7: 
+					if IsResolutionAlreadyBeingUsed("Local.ini","screenwidth=7680","screenheight=4320")==False:
+						print("7680x4320 was selected")
+						newWidthRes="screenwidth=7680"
+						newHeightRes="screenheight=4320"
+						break
+					else:
+						userSelection=99 #makes while not break
 			else:
 				print("Error: option", userSelection,"is not avaliable. Please pick one of the avaliable options")
 		else:
@@ -233,13 +258,12 @@ def writeAtTheEndOfFile(filename, newLine):
 	file_object.close()
 
 def mainMenu():
-	print("Dawn of War Resolution Fix python Script Main Menu \n What would you like to do?\n 0: Change Aspect Ratio of The Game  \n 1: Change Resolution of the game \n 2: Restore original settings")
-	print("")
+	print("Dawn of War Resolution Fix python Script Main Menu \n What would you like to do?\n 0: Change Aspect Ratio of The Game  \n 1: Change Resolution of the game \n 2: Change Aspect Ratio and Resolution of The Game \n 3: Restore original settings")
 
 def IsExecutablePatched(filename,originalHexString):
 	#check if executable had its aspect ratio values already edited by this script or another one
 	tf=False
-	originalBinaryString=binascii.unhexlify(originalHexString)
+	originalBinaryString=binascii.unhexlify(originalHexString)#converts hexstring to binary string
 	print("Checking if Dawn of War executable is already patched...")
 	with open(filename,"rb") as file:
 		contents = file.read()
@@ -248,22 +272,27 @@ def IsExecutablePatched(filename,originalHexString):
 			print("{0} executable aspect ratio  is not patched yet".format(filename))
 			tf=False
 		else:
-			print("{0} executable aspect ratio  has been patched".format(filename))
+			print("{0} executable aspect ratio  has been patched already".format(filename))
 			tf=True
 	return tf
 
-#Check if Backup dir of files already exists if not, create W40KFilesBackup folder
-def main():
-	print(checkIfFileExists("W40K.exe"))
-	checkIfBackupDirExists()
-    #print("The file ",".\W40KFilesBackup","exists",checkIfFileExists(".\W40KFilesBackup"))
-	Backup_and_rename_original_file("Local.ini","W40KFilesBackup")
-	Backup_and_rename_original_file("test.txt","W40KFilesBackup")
-	Backup_and_rename_original_file("W40k.exe","W40KFilesBackup")
-	Backup_and_rename_original_file("Platform.dll","W40KFilesBackup")
-	Backup_and_rename_original_file("spDx9.dll","W40KFilesBackup")
-	Backup_and_rename_original_file("UserInterface.dll","W40KFilesBackup")
-	SelectResolution()
+def IsResolutionAlreadyBeingUsed(filename, currentResolutionWidth, currentResolutionHeight):
+	#check if executable had its aspect ratio values already edited by this script or another one
+	tf=False
+	print("Checking if Dawn of War's {0} is already using this resolution...".format(filename))
+	with open(filename,"r") as file:
+		contents = file.read()
+		searchStringWidth = currentResolutionWidth
+		searchStringHeight = currentResolutionHeight
+		if searchStringWidth in contents and searchStringHeight in contents:
+			print("Error: It looks like Dawn of War {0} is already using {1} by {2} resolution".format(filename,currentResolutionWidth, currentResolutionHeight))
+			print("Please select another resolution")
+			tf=True
+		else:
+			tf=False
+	return tf
+
+def ChangeAspectRatio():
 	if IsExecutablePatched("W40k.exe","ABAAAA3F")==False:
 		aspectRatioHexValue=SelectAspectRatio()
 		print("Changing aspect ratio to its new hex value:",aspectRatioHexValue)
@@ -271,4 +300,21 @@ def main():
 		edit_hex("ABAAAA3F",aspectRatioHexValue,"Platform.dll")
 		edit_hex("ABAAAA3F",aspectRatioHexValue,"spDx9.dll")
 		edit_hex("ABAAAA3F",aspectRatioHexValue,"UserInterface.dll")
+
+def ChangeAspectRatioAndResolution():
+	SelectResolution()
+	ChangeAspectRatio()
+
+#Check if Backup dir of files already exists if not, create W40KFilesBackup folder
+def main():
+	print(checkIfFileExists("W40K.exe"))
+	checkIfBackupDirExists()
+	Backup_and_rename_original_file("Local.ini","W40KFilesBackup")
+	Backup_and_rename_original_file("test.txt","W40KFilesBackup")
+	Backup_and_rename_original_file("W40k.exe","W40KFilesBackup")
+	Backup_and_rename_original_file("Platform.dll","W40KFilesBackup")
+	Backup_and_rename_original_file("spDx9.dll","W40KFilesBackup")
+	Backup_and_rename_original_file("UserInterface.dll","W40KFilesBackup")
+	SelectResolution()
+	ChangeAspectRatio()
 main()
