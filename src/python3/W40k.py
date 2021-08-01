@@ -247,11 +247,14 @@ def SelectResolution():
 			print("Error: the option you typed ", userSelection,"is not a number! Please type the number of one of the avaliable options")
 			userSelection=99  #we add a default numeric value that doesnt exist in the avaliable options to avoid a catch because the user typed a value thats not a number
 	if userSelection != 8:# If user picked option to not change anything then dont change anything	
-		removeLineifStringIsFound("Local.ini","screenwidth")
-		removeLineifStringIsFound("Local.ini","screenheight")
-		removeLineifStringIsFound("Local.ini","\n")#truncateDocument
-		writeAtTheEndOfFile("Local.ini",newWidthRes)
-		writeAtTheEndOfFile("Local.ini","\n"+newHeightRes)
+		ChangeResolution(newWidthRes,newHeightRes)
+
+def ChangeResolution(newWidthRes,newHeightRes):
+	removeLineifStringIsFound("Local.ini","screenwidth")
+	removeLineifStringIsFound("Local.ini","screenheight")
+	removeLineifStringIsFound("Local.ini","\n")#truncateDocument
+	writeAtTheEndOfFile("Local.ini",newWidthRes)
+	writeAtTheEndOfFile("Local.ini","\n"+newHeightRes)
 
 def removeLineifStringIsFound(filename,string):
 	with open(filename,'r+') as f:
@@ -382,6 +385,7 @@ def restoreAllOriginalFilesW40K():
 	restoreOriginalFile("W40KFilesBackup","","Platform.dll")
 	restoreOriginalFile("W40KFilesBackup","","spDx9.dll")
 	restoreOriginalFile("W40KFilesBackup","","UserInterface.dll")
+	ChangeResolution("screenwidth=800","screenheight=600")
 	print("Restoration of all files succesfully completed!")
 
 def restoreOriginalFile(src,dst,filename):#Restores original files
