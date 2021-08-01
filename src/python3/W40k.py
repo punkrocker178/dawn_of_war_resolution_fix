@@ -14,9 +14,6 @@ def mkCopy(filename):
     print("Making a backup of", filename)
 
 def Backup_and_rename_original_file(filename, folder):
-	#copy_rename(os.curdir,"'SCU3.exe1")
-	#shutil.copy2(os.curdir, "SCU3.exe1")
-	#navigate_and_rename(os.curdir)
 	currentDir=str(os.getcwd())
 	fileTolook="\\"+filename
 	finalPath=currentDir+fileTolook
@@ -65,17 +62,21 @@ def replace_hex_chunk(oldhexstring, newhexstring,filename):
 	f.close()
 
 def checkIfBackupDirExists():
+#Checks if Backup dir of files already exists if not, create W40KFilesBackup folder
+	tf=False
 	if isdir==False:
 		print("Backup folder doesn't exist yet. Creating one...")
 		mkDir(".\W40KFilesBackup")
 		print("Successfully created .\W40KFilesBackup")
 	else:
 		print("Backup folder already exists")
+		tf=True
+	return tf
 
 def SelectAspectRatio():
 	userSelection=99
 	newAspectRatio="ABAAAA3F"
-	options = [0,1,2,3,4,6,7,8,9,10]
+	options = [0,1,2,3,4,5,6,7,8,9,10,11]
 
 	while int(userSelection) not in options:
 		print("Pick the Aspect Ratio in which you would like to play Warhammer 40k: Dawn Of War. \n Warhammer 40k: Dawn Of War's default aspect ration is 4:3")
@@ -90,6 +91,7 @@ def SelectAspectRatio():
 		print("8 - 21:9 (3840x1600)")#9A991940
 		print("9 - 32:9")#398E6340
 		print("10 - 32:10")#CCCCCD3F
+		print("11 - Dont change Aspect Ratio")#CCCCCD3F
 		userSelection=input()
 		if userSelection.isnumeric()==True:
 			if int(userSelection) in options:
@@ -139,6 +141,10 @@ def SelectAspectRatio():
 					print("Aspect Ratio 32:10 selected")
 					newAspectRatio="CCCCCD3F"
 					break
+				elif numberPicked==11:
+					print("You opted to not change the aspect ratio of the game")
+					newAspectRatio="No"
+					break
 			else:
 				print("Error: option", userSelection,"is not avaliable. Please pick one of the avaliable options")
 		else:
@@ -150,7 +156,7 @@ def SelectResolution():
 	newWidthRes="screenwidth=800"
 	newHeightRes="screenwidth=600"
 	userSelection=99
-	options = [0,1,2,3,4,5,6,7]
+	options = [0,1,2,3,4,5,6,7,8]
 
 	while int(userSelection) not in options:
 		print("Pick the resolution in which you would like to play Warhammer 40k: Dawn Of War. \n Warhammer 40k: Dawn Of War's default resolution is 800x600")
@@ -162,6 +168,7 @@ def SelectResolution():
 		print("5 - 3440x1440")#ABAAAA40
 		print("6 - 3840 x 2160")#9A999940
 		print("7 - 7680 x 4320")#26B41740
+		print("8 - Don't change the game resolution")#26B41740
 		userSelection=input()
 		if userSelection.isnumeric()==True:
 			if int(userSelection) in options:
@@ -231,16 +238,20 @@ def SelectResolution():
 						break
 					else:
 						userSelection=99 #makes while not break
+				elif numberPicked==8: 
+					print("You opted to not change the resolution")
+					break
 			else:
 				print("Error: option", userSelection,"is not avaliable. Please pick one of the avaliable options")
 		else:
 			print("Error: the option you typed ", userSelection,"is not a number! Please type the number of one of the avaliable options")
 			userSelection=99  #we add a default numeric value that doesnt exist in the avaliable options to avoid a catch because the user typed a value thats not a number
-	removeLineifStringIsFound("Local.ini","screenwidth")
-	removeLineifStringIsFound("Local.ini","screenheight")
-	removeLineifStringIsFound("Local.ini","\n")#truncateDocument
-	writeAtTheEndOfFile("Local.ini",newWidthRes)
-	writeAtTheEndOfFile("Local.ini","\n"+newHeightRes)
+	if userSelection != 8:# If user picked option to not change anything then dont change anything	
+		removeLineifStringIsFound("Local.ini","screenwidth")
+		removeLineifStringIsFound("Local.ini","screenheight")
+		removeLineifStringIsFound("Local.ini","\n")#truncateDocument
+		writeAtTheEndOfFile("Local.ini",newWidthRes)
+		writeAtTheEndOfFile("Local.ini","\n"+newHeightRes)
 
 def removeLineifStringIsFound(filename,string):
 	with open(filename,'r+') as f:
@@ -258,8 +269,40 @@ def writeAtTheEndOfFile(filename, newLine):
 	file_object.close()
 
 def mainMenu():
-	print("Dawn of War Resolution Fix python Script Main Menu \n What would you like to do?\n 0: Change Aspect Ratio of The Game  \n 1: Change Resolution of the game \n 2: Change Aspect Ratio and Resolution of The Game \n 3: Restore original settings")
-
+	userSelection=99
+	options = [0,1,2,3,4]
+	while int(userSelection) not in options:
+		print("\n Dawn of War Resolution Fix python Script Main Menu \n What would you like to do?\n 0: Change Aspect Ratio of The Game  \n 1: Change Resolution of the game \n 2: Change Aspect Ratio and Resolution of The Game \n 3: Restore original files \n 4: Exit Script")
+		userSelection=input()
+		if userSelection.isnumeric()==True:
+			if int(userSelection) in options:
+				print("You picked option", userSelection)
+				numberPicked= int(userSelection)
+				if numberPicked==0:
+					print("Change Aspect Ratio of The Game selected \n")
+					ChangeAspectRatio()
+					userSelection=99
+				elif numberPicked==1:
+					print("Change Resolution of the game selected \n")
+					SelectResolution()
+					userSelection=99
+				elif numberPicked==2:
+					print("Change Aspect Ratio and Resolution of The Game")
+					ChangeAspectRatioAndResolution()
+					userSelection=99
+				elif numberPicked==3:
+					print("Restore original files selected")
+					restoreAllOriginalFilesW40K()
+					userSelection=99
+				elif numberPicked==4:
+					print("Exit selected")
+					print("Thanks for using this script! \n Until next time!")
+					break
+			else:
+				print("Error: option", userSelection,"is not avaliable. Please pick one of the avaliable options")
+		else:
+			print("Error: the option you typed ", userSelection,"is not a number! Please type the number of one of the avaliable options")
+			userSelection=99 #we add a default numeric value that doesnt exist in the avaliable options to avoid a catch because the user typed a value thats not a number
 def IsExecutablePatched(filename,originalHexString):
 	#check if executable had its aspect ratio values already edited by this script or another one
 	tf=False
@@ -286,28 +329,67 @@ def IsResolutionAlreadyBeingUsed(filename, currentResolutionWidth, currentResolu
 		searchStringHeight = currentResolutionHeight
 		if searchStringWidth in contents and searchStringHeight in contents:
 			print("Error: It looks like Dawn of War {0} is already using {1} by {2} resolution".format(filename,currentResolutionWidth, currentResolutionHeight))
-			print("Please select another resolution")
+			print("Please select another resolution or pick the option to not change any resolution at all")
 			tf=True
 		else:
 			tf=False
 	return tf
 
+def promptToRestoreFiles():#Prompt asking if the user would like to restore the original files of the game
+	userSelection=99
+	options = [0,1]
+	while int(userSelection) not in options:
+		print("It appears that your Warhammer 40K executable and dlls have already been modified before to play in a different aspect ratio.\n In order to change the aspect ratio of Warhammer 40k: Dawn Of War again \n We need to restore them before allowing you to modify it again. \n 0 - No) \n 1 - Yes")
+		userSelection=input()
+		if userSelection.isnumeric()==True:
+			if int(userSelection) in options:
+				print("You picked option", userSelection)
+				numberPicked= int(userSelection)
+				if numberPicked==0:
+					print("You picked No, so the files wont be restored, therefore, you wont be able to change the resolution.")
+					break
+				elif numberPicked==1:
+					print("You picked Yes, so the files will be restored to the original ones before you can change the aspect ratio of the game again.")
+					restoreAllOriginalFilesW40K()
+			else:
+				print("Error: option", userSelection,"is not avaliable. Please pick one of the avaliable options")
+		else:
+			print("Error: the option you typed ", userSelection,"is not a number! Please type the number of one of the avaliable options")
+			userSelection=99  #we add a default numeric value that doesnt exist in the avaliable options to avoid a catch because the user typed a value thats not a number
+
 def ChangeAspectRatio():
-	if IsExecutablePatched("W40k.exe","ABAAAA3F")==False:
+	if IsExecutablePatched("W40k.exe","ABAAAA3F")==True: #check if executable has already been patched
+		promptToRestoreFiles()
+	if IsExecutablePatched("W40k.exe","ABAAAA3F")==False: #Checks if the exetuable is already patched before trying to modify its aspect ratio again in order to avoid mistakes
 		aspectRatioHexValue=SelectAspectRatio()
-		print("Changing aspect ratio to its new hex value:",aspectRatioHexValue)
-		edit_hex("ABAAAA3F",aspectRatioHexValue,"W40k.exe")
-		edit_hex("ABAAAA3F",aspectRatioHexValue,"Platform.dll")
-		edit_hex("ABAAAA3F",aspectRatioHexValue,"spDx9.dll")
-		edit_hex("ABAAAA3F",aspectRatioHexValue,"UserInterface.dll")
+		if aspectRatioHexValue!="No":
+			print("Changing aspect ratio to its new hex value:",aspectRatioHexValue)
+			edit_hex("ABAAAA3F",aspectRatioHexValue,"W40k.exe")
+			edit_hex("ABAAAA3F",aspectRatioHexValue,"Platform.dll")
+			edit_hex("ABAAAA3F",aspectRatioHexValue,"spDx9.dll")
+			edit_hex("ABAAAA3F",aspectRatioHexValue,"UserInterface.dll")
+	else:
+		print("Error: It appears that your Warhammer 40K executable and dlls have already been modified before to play in a different aspect ratio \n Please restore the original files before trying to change the aspect ratio again.")
+
 
 def ChangeAspectRatioAndResolution():
 	SelectResolution()
 	ChangeAspectRatio()
 
-#Check if Backup dir of files already exists if not, create W40KFilesBackup folder
-def main():
-	print(checkIfFileExists("W40K.exe"))
+def restoreAllOriginalFilesW40K():
+	print("Restoring original files of the game..")
+	restoreOriginalFile("W40KFilesBackup","","W40k.exe")
+	restoreOriginalFile("W40KFilesBackup","","Platform.dll")
+	restoreOriginalFile("W40KFilesBackup","","spDx9.dll")
+	restoreOriginalFile("W40KFilesBackup","","UserInterface.dll")
+	print("Restoration of all files succesfully completed!")
+
+def restoreOriginalFile(src,dst,filename):#Restores original files
+	print("Restoring {2} in {0} to {1}...".format(src,dst,filename))
+	shutil.copy(os.path.join(src, filename), os.path.join(dst, filename))
+	print("Restoration of unmodified {0} was successfully completed!".format(filename))
+
+def firstTimeRunningSteps():
 	checkIfBackupDirExists()
 	Backup_and_rename_original_file("Local.ini","W40KFilesBackup")
 	Backup_and_rename_original_file("test.txt","W40KFilesBackup")
@@ -317,4 +399,13 @@ def main():
 	Backup_and_rename_original_file("UserInterface.dll","W40KFilesBackup")
 	SelectResolution()
 	ChangeAspectRatio()
+
+def main():
+	if checkIfFileExists("W40K.exe") ==True: 
+		if checkIfBackupDirExists() ==False:
+			firstTimeRunningSteps()
+		else :
+			mainMenu()
+	else:
+		input("Error: Couldnt detect a W40k.exe in this folder! \n\n It Appears that you have placed this script in the wrong directory. \n Please insert this in the root folder of your Dawn of War 1 installation \n and then try to run it again. \n Press any button to exit this script")
 main()
