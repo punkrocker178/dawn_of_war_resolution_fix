@@ -1,3 +1,19 @@
+#!/usr/bin/python3
+#Dawn of War 1 Resolution Fix made by Tetration
+#Github author address: https://github.com/tetration
+#Github repository: https://github.com/tetration/dawn_of_war_resolution_fix
+#Written for Python 3
+
+#This is an unofficial fan mod provided for free I have no affiliation with Relic or Games Workshop
+#Warhammer is an Intellectual Property of Games Workshop 
+#Warhammer® 40,000: Dawn of War is property of Relic and Sega.
+
+#Warning:
+# This script and the author is not responsible for any damages
+# it might cause you including but not limited to damaging your system, 
+# corrupting your files and game saves nor  giving you any kind of stress at all and so on. 
+# Use it at your own will and risk!
+
 import os
 import shutil
 import binascii
