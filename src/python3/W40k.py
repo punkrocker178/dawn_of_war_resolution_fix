@@ -410,9 +410,8 @@ def restoreOriginalFile(src,dst,filename):#Restores original files
 	print("Restoration of unmodified {0} was successfully completed!".format(filename))
 
 def firstTimeRunningSteps():
-	checkIfBackupDirExists()
 	Backup_and_rename_original_file("Local.ini","W40KFilesBackup")
-	Backup_and_rename_original_file("test.txt","W40KFilesBackup")
+	# Backup_and_rename_original_file("test.txt","W40KFilesBackup")
 	Backup_and_rename_original_file("W40k.exe","W40KFilesBackup")
 	Backup_and_rename_original_file("Platform.dll","W40KFilesBackup")
 	Backup_and_rename_original_file("spDx9.dll","W40KFilesBackup")
